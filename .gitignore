@@ -24,6 +24,9 @@ build
 .idea
 *.db
 
+# Input files
+input.txt
+
 # vscode
 .vscode/
 
