@@ -25,9 +25,9 @@ def part2(lists: List[List[Int]]): Int =
     val unsafeOnly = maskedTuple.filter(x => !x._1.foldLeft(true)(_ && _))
     val p: List[List[Int]] = for (i <- unsafeOnly) yield i._2
     
-    val bruteforce = for (l <- p)
+    val bruteforce = for (l <- lists)
         yield poppinNumbers(l)
-        
+
     bruteforce.count(x => x == true)
 
 
@@ -67,11 +67,13 @@ def poppinNumbers(l: List[Int]): Boolean =
     val unTouched = l
 
     @tailrec
-    def popPop(pl: List[Int], count: Boolean): Boolean = 
-        (pl,count) match 
-            case (_,true) => count
-            case (Nil,_) => count
-            case (p,_) => popPop(pl diff List(pl.head), safeUnsafe(unTouched diff List(pl.head)).foldLeft(true)(_ && _))
-    popPop(l, false)
+    def popPop(count: Boolean, n: Int): Boolean = 
+        (count, n) match 
+            case (true, _) => count
+            case (_, x) if x >= unTouched.length => count
+            case (_,_) =>
+                val poppedNum = unTouched.zipWithIndex.filter(_._2 != n).map(_._1)
+                popPop(safeUnsafe(poppedNum).foldLeft(true)(_ && _), n+1)
+    popPop(false, 0)
     
         
